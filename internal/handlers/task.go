@@ -8,7 +8,7 @@ import (
 	"log"
 	"net/http"
 	"strconv"
-	"task3/internal/data"
+	"task3/internal/models"
 )
 
 func (h Handler) AddTask(w http.ResponseWriter, r *http.Request) {
@@ -19,7 +19,7 @@ func (h Handler) AddTask(w http.ResponseWriter, r *http.Request) {
 		log.Fatalln(err)
 	}
 
-	var task data.Task
+	var task models.Task
 	json.Unmarshal(body, &task)
 
 	// Append to the Tasks table
@@ -40,7 +40,7 @@ func (h Handler) DeleteTask(w http.ResponseWriter, r *http.Request) {
 
 	// Find the project by Id
 
-	var task data.Task
+	var task models.Task
 
 	if result := h.DB.First(&task, id); result.Error != nil {
 		fmt.Println(result.Error)
@@ -55,7 +55,7 @@ func (h Handler) DeleteTask(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h Handler) GetAllTasks(w http.ResponseWriter, r *http.Request) {
-	var tasks []data.Task
+	var tasks []models.Task
 
 	if result := h.DB.Find(&tasks); result.Error != nil {
 		fmt.Println(result.Error)
@@ -72,7 +72,7 @@ func (h Handler) GetTask(w http.ResponseWriter, r *http.Request) {
 	id, _ := strconv.Atoi(vars["id"])
 
 	// Find book by Id
-	var task data.Task
+	var task models.Task
 
 	if result := h.DB.First(&task, id); result.Error != nil {
 		fmt.Println(result.Error)
@@ -96,10 +96,10 @@ func (h Handler) UpdateTask(w http.ResponseWriter, r *http.Request) {
 		log.Fatalln(err)
 	}
 
-	var updateTask data.Task
+	var updateTask models.Task
 	json.Unmarshal(body, &updateTask)
 
-	var task data.Task
+	var task models.Task
 
 	if result := h.DB.First(&task, id); result.Error != nil {
 		fmt.Println(result.Error)

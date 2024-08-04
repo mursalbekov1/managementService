@@ -8,8 +8,8 @@ import (
 	"net/http"
 	"os"
 	"task3/internal/config"
-	"task3/internal/data"
 	"task3/internal/handlers"
+	"task3/internal/models"
 	"task3/internal/route"
 )
 
@@ -28,7 +28,7 @@ func main() {
 	}
 	h := handlers.New(db)
 
-	db.AutoMigrate(&data.User{}, &data.Task{}, &data.Project{})
+	db.AutoMigrate(&models.User{}, &models.Task{}, &models.Project{})
 
 	r := route.Router(h)
 

@@ -8,7 +8,7 @@ import (
 	"log"
 	"net/http"
 	"strconv"
-	"task3/internal/data"
+	"task3/internal/models"
 )
 
 func (h Handler) AddUser(w http.ResponseWriter, r *http.Request) {
@@ -19,7 +19,7 @@ func (h Handler) AddUser(w http.ResponseWriter, r *http.Request) {
 		log.Fatalln(err)
 	}
 
-	var user data.User
+	var user models.User
 	json.Unmarshal(body, &user)
 
 	// Append to the Users table
@@ -40,7 +40,7 @@ func (h Handler) DeleteUser(w http.ResponseWriter, r *http.Request) {
 
 	// Find the project by Id
 
-	var user data.User
+	var user models.User
 
 	if result := h.DB.First(&user, id); result.Error != nil {
 		fmt.Println(result.Error)
@@ -55,7 +55,7 @@ func (h Handler) DeleteUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h Handler) GetAllUsers(w http.ResponseWriter, r *http.Request) {
-	var users []data.User
+	var users []models.User
 
 	if result := h.DB.Find(&users); result.Error != nil {
 		fmt.Println(result.Error)
@@ -72,7 +72,7 @@ func (h Handler) GetUser(w http.ResponseWriter, r *http.Request) {
 	id, _ := strconv.Atoi(vars["id"])
 
 	// Find book by Id
-	var user data.User
+	var user models.User
 
 	if result := h.DB.First(&user, id); result.Error != nil {
 		fmt.Println(result.Error)
@@ -96,10 +96,10 @@ func (h Handler) UpdateUser(w http.ResponseWriter, r *http.Request) {
 		log.Fatalln(err)
 	}
 
-	var updateUser data.User
+	var updateUser models.User
 	json.Unmarshal(body, &updateUser)
 
-	var user data.User
+	var user models.User
 
 	if result := h.DB.First(&user, id); result.Error != nil {
 		fmt.Println(result.Error)

@@ -9,7 +9,7 @@ import (
 	"log"
 	"net/http"
 	"strconv"
-	"task3/internal/data"
+	"task3/internal/models"
 )
 
 type Handler struct {
@@ -28,7 +28,7 @@ func (h Handler) AddProject(w http.ResponseWriter, r *http.Request) {
 		log.Fatalln(err)
 	}
 
-	var project data.Project
+	var project models.Project
 	json.Unmarshal(body, &project)
 
 	// Append to the Books table
@@ -49,7 +49,7 @@ func (h Handler) DeleteProject(w http.ResponseWriter, r *http.Request) {
 
 	// Find the project by Id
 
-	var project data.Project
+	var project models.Project
 
 	if result := h.DB.First(&project, id); result.Error != nil {
 		fmt.Println(result.Error)
@@ -64,7 +64,7 @@ func (h Handler) DeleteProject(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h Handler) GetAllProjects(w http.ResponseWriter, r *http.Request) {
-	var projects []data.Project
+	var projects []models.Project
 
 	if result := h.DB.Find(&projects); result.Error != nil {
 		fmt.Println(result.Error)
@@ -81,7 +81,7 @@ func (h Handler) GetProject(w http.ResponseWriter, r *http.Request) {
 	id, _ := strconv.Atoi(vars["id"])
 
 	// Find book by Id
-	var project data.Project
+	var project models.Project
 
 	if result := h.DB.First(&project, id); result.Error != nil {
 		fmt.Println(result.Error)
@@ -105,10 +105,10 @@ func (h Handler) UpdateProject(w http.ResponseWriter, r *http.Request) {
 		log.Fatalln(err)
 	}
 
-	var updatedProject data.Project
+	var updatedProject models.Project
 	json.Unmarshal(body, &updatedProject)
 
-	var project data.Project
+	var project models.Project
 
 	if result := h.DB.First(&project, id); result.Error != nil {
 		fmt.Println(result.Error)
