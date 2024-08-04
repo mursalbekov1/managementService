@@ -115,3 +115,74 @@ func (h Handler) UpdateTask(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode("Updated")
 }
+
+func (h Handler) GetTasksByTitle(w http.ResponseWriter, r *http.Request) {
+	title := r.URL.Query().Get("title")
+
+	var tasks []models.Task
+	if result := h.DB.Where("name LIKE ?", "%"+title+"%").Find(&tasks); result.Error != nil {
+		http.Error(w, result.Error.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Add("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(tasks)
+}
+
+// GetTasksByStatus обрабатывает запросы GET /tasks/search?status={status}
+func (h Handler) GetTasksByStatus(w http.ResponseWriter, r *http.Request) {
+	status := r.URL.Query().Get("status")
+
+	var tasks []models.Task
+	if result := h.DB.Where("state = ?", status).Find(&tasks); result.Error != nil {
+		http.Error(w, result.Error.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Add("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(tasks)
+}
+
+func (h Handler) GetTasksByPriority(w http.ResponseWriter, r *http.Request) {
+	priority := r.URL.Query().Get("priority")
+
+	var tasks []models.Task
+	if result := h.DB.Where("priority = ?", priority).Find(&tasks); result.Error != nil {
+		http.Error(w, result.Error.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Add("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(tasks)
+}
+
+func (h Handler) GetTasksByAssignee(w http.ResponseWriter, r *http.Request) {
+	assignee := r.URL.Query().Get("assignee")
+
+	var tasks []models.Task
+	if result := h.DB.Where("responsible = ?", assignee).Find(&tasks); result.Error != nil {
+		http.Error(w, result.Error.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Add("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(tasks)
+}
+
+func (h Handler) GetTasksByProject(w http.ResponseWriter, r *http.Request) {
+	project := r.URL.Query().Get("project")
+
+	var tasks []models.Task
+	if result := h.DB.Where("project = ?", project).Find(&tasks); result.Error != nil {
+		http.Error(w, result.Error.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Add("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(tasks)
+}

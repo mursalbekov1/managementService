@@ -124,3 +124,38 @@ func (h Handler) UpdateProject(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode("Updated")
 }
+
+func (h Handler) GetProjectsByTitle(w http.ResponseWriter, r *http.Request) {
+	title := r.URL.Query().Get("title")
+	var projects []models.Project
+
+	if result := h.DB.Where("name ILIKE ?", "%"+title+"%").Find(&projects); result.Error != nil {
+		fmt.Println(result.Error)
+		http.Error(w, "Failed to retrieve projects", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Add("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(projects)
+}
+
+func (h Handler) GetProjectsByManager(w http.ResponseWriter, r *http.Request) {
+	manager := r.URL.Query().Get("manager")
+	managerID, err := strconv.Atoi(manager)
+	if err != nil {
+		http.Error(w, "Invalid manager ID", http.StatusBadRequest)
+		return
+	}
+
+	var projects []models.Project
+	if result := h.DB.Where("manager = ?", managerID).Find(&projects); result.Error != nil {
+		fmt.Println(result.Error)
+		http.Error(w, "Failed to retrieve projects", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Add("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(projects)
+}

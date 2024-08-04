@@ -115,3 +115,60 @@ func (h Handler) UpdateUser(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode("Updated")
 }
+
+func (h Handler) GetUsersByName(w http.ResponseWriter, r *http.Request) {
+	name := r.URL.Query().Get("name")
+	if name == "" {
+		http.Error(w, "Query parameter 'name' is required", http.StatusBadRequest)
+		return
+	}
+
+	var users []models.User
+	if result := h.DB.Where("name = ?", name).Find(&users); result.Error != nil {
+		http.Error(w, result.Error.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Add("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(users)
+}
+
+func (h Handler) GetUsersByEmail(w http.ResponseWriter, r *http.Request) {
+	email := r.URL.Query().Get("email")
+	if email == "" {
+		http.Error(w, "Query parameter 'email' is required", http.StatusBadRequest)
+		return
+	}
+
+	var users []models.User
+	if result := h.DB.Where("email = ?", email).Find(&users); result.Error != nil {
+		http.Error(w, result.Error.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Add("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(users)
+}
+
+func (h Handler) GetUserTasks(w http.ResponseWriter, r *http.Request) {
+	// Чтение параметра id
+	vars := mux.Vars(r)
+	id, err := strconv.Atoi(vars["id"])
+	if err != nil {
+		http.Error(w, "Invalid user ID", http.StatusBadRequest)
+		return
+	}
+
+	var tasks []models.Task
+	// Найти задачи, связанные с пользователем по id
+	if result := h.DB.Where("responsible = ?", id).Find(&tasks); result.Error != nil {
+		http.Error(w, result.Error.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Add("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(tasks)
+}
