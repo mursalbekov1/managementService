@@ -33,7 +33,7 @@ func (h Handler) AddTask(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode("Created")
 }
 
-func (h Handler) DeleTask(w http.ResponseWriter, r *http.Request) {
+func (h Handler) DeleteTask(w http.ResponseWriter, r *http.Request) {
 	// Read the dynamic id parameter
 	vars := mux.Vars(r)
 	id, _ := strconv.Atoi(vars["id"])

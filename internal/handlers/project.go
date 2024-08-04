@@ -92,7 +92,7 @@ func (h Handler) GetProject(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(project)
 }
 
-func (h Handler) UpdateBook(w http.ResponseWriter, r *http.Request) {
+func (h Handler) UpdateProject(w http.ResponseWriter, r *http.Request) {
 	// Read dynamic id parameter
 	vars := mux.Vars(r)
 	id, _ := strconv.Atoi(vars["id"])
